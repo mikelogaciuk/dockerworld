@@ -10,7 +10,7 @@ cd mongodb-single-node
 cp .env.sample .env
 ```
 
-And copy default `sample-mongo-init.sh` as `mongo-init.sh` and edit depending on your needs:
+And copy default `sample-init.sh` as `mongo-init.sh` and edit depending on your needs:
 
 ```shell
 cp sample-mongo-init.sh mongo-init.sh
