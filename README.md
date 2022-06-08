@@ -1,4 +1,4 @@
-# docker-images
+# dockerworld
 
 ![Docker](./docker.jpg)
 
@@ -10,7 +10,7 @@
 
 ## About
 
-Docker images in a form of `dockerfiles` and `docker-compose` for development purposes.
+Docker images in a form of `dockerfiles` or `docker-compose` for development purposes.
 
 ## Usage
 
