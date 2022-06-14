@@ -1,0 +1,9 @@
+.venv
+.idea
+.pytest_cache
+.git
+__pycache__
+build
+dist
+*.spec
+/logs
