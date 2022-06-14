@@ -126,3 +126,35 @@ And uncomment:
 ```yaml
  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:latest}
 ```
+
+## Custom connections
+
+Sometimes you need to override default provider settings e.g. use `pymssql` instead of `pyodbc`.
+
+For this, you need to invoke in `docker-compose` an ENV from `.env` with proper setup and export it during startup.
+
+Then you need to refer it in DAG using your ENV_NAME.
+
+Example based on `.env.sample`:
+
+```yaml
+AIRFLOW_CONN_MSSQL_CUST1=mssql+pymssql://DOMAIN\\USER:PASSWORD@SERVER
+```
+
+And in `docker-compose`:
+
+```yaml
+version: '3'
+x-airflow-common:
+  # In order to add custom dependencies or upgrade provider packages you can use your extended image.
+  # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
+  # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
+
+  # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:latest}
+  &airflow-common
+  build: .
+  environment:
+    &airflow-common-env
+    (...)
+    AIRFLOW_CONN_MSSQL_CUST1: ${AIRFLOW_CONN_MSSQL_CUST1}
+```
