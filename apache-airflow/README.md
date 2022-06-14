@@ -12,23 +12,44 @@ If not given, will use default passwords from `docker-compose.yml` on its own.
 
 ## Deployment
 
-In order to use it, type:
+First, you need to build image:
 
 ```shell
+docker compose build
+```
+
+Then init database:
+
+```shell
+docker compose up airflow-init
+```
+
+Then:
+
+```shell
+mkdir logs && sudo chmod -R 777 logs/
 docker compose up -d
 ```
 
-If everything is okey, you should see something like this:
+To check if everything is up and running, type:
 
 ```shell
-[+] Running 7/7
- ⠿ Container apache-airflow-redis-1              Healthy                                                                                                                                                 1.4s
- ⠿ Container apache-airflow-postgres-1           Healthy                                                                                                                                                 1.4s
- ⠿ Container apache-airflow-airflow-init-1       Exited                                                                                                                                                  9.9s
- ⠿ Container apache-airflow-airflow-webserver-1  Running                                                                                                                                                 0.0s
- ⠿ Container apache-airflow-airflow-worker-1     Running                                                                                                                                                 0.0s
- ⠿ Container apache-airflow-airflow-triggerer-1  Running                                                                                                                                                 0.0s
- ⠿ Container apache-airflow-airflow-scheduler-1  Running                                                                                                                                                 0.0s
+docker compose ps
+```
+
+And you should see something like this with healthy containers:
+
+```shell
+$ docker compose ps
+
+NAME                                 COMMAND                  SERVICE             STATUS              PORTS
+apache-airflow-airflow-init-1        "/bin/bash -c 'funct…"   airflow-init        exited (0)
+apache-airflow-airflow-scheduler-1   "/usr/bin/dumb-init …"   airflow-scheduler   running (healthy)   8080/tcp
+apache-airflow-airflow-triggerer-1   "/usr/bin/dumb-init …"   airflow-triggerer   running (healthy)   8080/tcp
+apache-airflow-airflow-webserver-1   "/usr/bin/dumb-init …"   airflow-webserver   running (healthy)   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp
+apache-airflow-airflow-worker-1      "/usr/bin/dumb-init …"   airflow-worker      running (healthy)   8080/tcp
+apache-airflow-postgres-1            "docker-entrypoint.s…"   postgres            running (healthy)   5432/tcp
+apache-airflow-redis-1               "docker-entrypoint.s…"   redis               running (healthy)   6379/tcp
 ```
 
 ## Access
@@ -66,3 +87,42 @@ sudo rm -r dags logs plugins
 Default `apache-airflow` image doesn't contain special providers like Oracle or MSSQL.
 
 In order to use it, you need to build own image and use it in compose.
+
+Though I provided custom dockerfile that builds custom image containing providers such as:
+
+```requirements
+psycopg2-binary
+cx_Oracle
+cassandra-driver
+dnspython
+pymongo
+sqlalchemy
+pandas
+numpy
+pymssql
+pyodbc
+apache-airflow-providers-odbc
+apache-airflow-providers-cncf-kubernetes
+apache-airflow-providers-docker
+apache-airflow-providers-apache-spark
+apache-airflow-providers-apache-cassandra
+apache-airflow-providers-microsoft-mssql
+apache-airflow-providers-microsoft-azure
+apache-airflow-providers-postgres
+apache-airflow-providers-oracle
+apache-airflow-providers-elasticsearch
+apache-airflow-providers-mongo
+apache-airflow-providers-mysql
+```
+
+In order to use clean image from docker hub, comment:
+
+```yaml
+build .
+```
+
+And uncomment:
+
+```yaml
+ # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:latest}
+```
