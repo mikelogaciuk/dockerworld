@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  mssql-dev-server:
+    container_name: mssql-dev-server
+    hostname: mssql-dev-server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    volumes:
+      - ./mssql_dev_data:/var/lib/mssqlql/data
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${MSSQL_ADMIN_PWD:-zaq12WSX}
+    restart: on-failure
+    networks:
+      - services
+
+
+volumes:
+  mssql_dev_data:
+    driver: local
+    name: mssql_dev_data
+
+networks:
+  services:
+    name: ${MSSQL_NETWORK:-mssql-dev-server}
