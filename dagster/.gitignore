@@ -1,0 +1,5 @@
+dagster_pgadmin_data
+dagster_postgres_data
+dagster_home
+dagster_data
+.env

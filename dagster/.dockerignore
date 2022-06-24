@@ -1,0 +1,13 @@
+.venv
+.idea
+.pytest_cache
+.git
+__pycache__
+build
+dist
+*.spec
+dagster_pgadmin_data
+dagster_postgres_data
+dagster_home
+dagster_data
+.env
